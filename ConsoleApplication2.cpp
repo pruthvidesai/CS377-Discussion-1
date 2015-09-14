@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#define MAXLEN 100
+#define MAXLEN 1000
 
 struct node {
 	// data structure to hold the word
@@ -22,7 +22,7 @@ bool read_text(char *filename, void *buffer, int size_of_buffer)
 		return true;
 	}
 
-	fread(buffer, size_of_buffer, 1, input_file);
+	fread(buffer, size_of_buffer + 1, 1, input_file);
 	printf("The bytes read are\n[%s]\n", buffer);
 	fclose(input_file);
 }
@@ -39,9 +39,11 @@ void insert(void *word);
 
 // create the list and return the alphabetically sorted output
 int main() {
-	//buffer
+
 	char *buffer;
-	buffer = (char*)malloc(sizeof(char));
-	read_text("input.txt", buffer, MAXLEN);
+	buffer = (char*) malloc(sizeof(char));
+	read_text("input.txt", &buffer, MAXLEN);
+
+	free(buffer);
 	return 0;
 }
