@@ -16,21 +16,14 @@ bool read_text(char *filename, void *buffer, int size_of_buffer)
 	FILE *input_file = NULL;
 	input_file = fopen(filename, "r");
 
-	//memset(buffer, 0, size_of_buffer);
-
 	if (NULL == input_file)
 	{
 		printf("\n File doesn't exist!\n");
 		return true;
 	}
 
-	if (size_of_buffer*MAXLEN != fread(buffer, size_of_buffer, MAXLEN, input_file))
-	{
-		printf("\nRead failed\n");
-		return true;
-	}
-
-	printf("\n The bytes read are %s \n", buffer);
+	fread(buffer, size_of_buffer, 1, input_file);
+	printf("The bytes read are\n[%s]\n", buffer);
 	fclose(input_file);
 }
 
@@ -47,6 +40,8 @@ void insert(void *word);
 // create the list and return the alphabetically sorted output
 int main() {
 	//buffer
-	char *buffer[MAXLEN];
+	char *buffer;
+	buffer = (char*)malloc(sizeof(char));
 	read_text("input.txt", buffer, MAXLEN);
+	return 0;
 }
