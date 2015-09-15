@@ -21,8 +21,10 @@ bool read_text(char *filename, void *buffer, int size_of_buffer)
 		return true;
 	}
 
-	fread(buffer, size_of_buffer, sizeof(char), input_file);
+	int read = fread(buffer, (size_t)sizeof(char), (size_t)size_of_buffer, input_file);
 	printf("The bytes read are\n[%s]\n", buffer);
+	//printf("Pointer size is: %d vs %d\n", size_of_buffer * sizeof(char), read);
+	//printf("Sizeof(buffer): %d\n", sizeof(buffer));
 	fclose(input_file);
 }
 
@@ -32,6 +34,7 @@ bool next_word(void *buffer, void *word);
 // Insert the word in the linked list
 void insert(void *word);
 
+// Get file size from input file
 int buffer_size(char *filename)
 {
 	FILE *input_file = fopen(filename, "r");
@@ -41,6 +44,17 @@ int buffer_size(char *filename)
 	fclose(input_file);
 	return size;
 }
+
+// Write to a new file
+bool write_text(char *filename, void *buffer, int size_of_buffer)
+{
+	FILE *output_file;
+	output_file = fopen(filename, "wb");
+	fwrite(buffer, (size_t)sizeof(char), (size_t)size_of_buffer, output_file);
+	fclose(output_file);
+	return 0;
+}
+
 // Note: You can use a helper function to insert. 
 // The main purpose of the function is to find the location in existing linked list 
 // to insert the new word.
@@ -53,7 +67,7 @@ int main() {
 	int size_of_buffer = buffer_size("input.txt");
 	buffer = (char*) malloc(sizeof(char) * size_of_buffer);
 	read_text("input.txt", buffer, size_of_buffer);
-
+	write_text("output.txt", buffer, size_of_buffer);
 	free(buffer);
 	return 0;
 }
