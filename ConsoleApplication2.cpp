@@ -7,6 +7,7 @@ struct node {
 	// data structure to hold the word
 	char *word;	//The word represented by this node
 	struct node *next;	//The next word in the list
+	struct node *prev; // The previous word in the list
 };
 
 // Read the text from file and store it in a buffer
