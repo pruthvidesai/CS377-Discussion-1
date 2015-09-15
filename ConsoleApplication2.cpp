@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#define MAXLEN 1000
 
 struct node {
 	// data structure to hold the word
@@ -22,7 +21,7 @@ bool read_text(char *filename, void *buffer, int size_of_buffer)
 		return true;
 	}
 
-	fread(buffer, size_of_buffer + 1, 1, input_file);
+	fread(buffer, size_of_buffer, sizeof(char), input_file);
 	printf("The bytes read are\n[%s]\n", buffer);
 	fclose(input_file);
 }
@@ -33,6 +32,15 @@ bool next_word(void *buffer, void *word);
 // Insert the word in the linked list
 void insert(void *word);
 
+int buffer_size(char *filename)
+{
+	FILE *input_file = fopen(filename, "r");
+	fseek(input_file, 0, SEEK_END);
+	int size = ftell(input_file);
+	//printf("%ld\n", size);
+	fclose(input_file);
+	return size;
+}
 // Note: You can use a helper function to insert. 
 // The main purpose of the function is to find the location in existing linked list 
 // to insert the new word.
@@ -41,8 +49,10 @@ void insert(void *word);
 int main() {
 
 	char *buffer;
-	buffer = (char*) malloc(sizeof(char));
-	read_text("input.txt", &buffer, MAXLEN);
+
+	int size_of_buffer = buffer_size("input.txt");
+	buffer = (char*) malloc(sizeof(char) * size_of_buffer);
+	read_text("input.txt", buffer, size_of_buffer);
 
 	free(buffer);
 	return 0;
