@@ -1,4 +1,4 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -63,12 +63,21 @@ bool write_text(char *filename, void *buffer, int size_of_buffer)
 // create the list and return the alphabetically sorted output
 int main() {
 
+	// Declare buffer to read from file
 	char *buffer;
-
-	int size_of_buffer = buffer_size("input.txt");
+	
+	// Read contents from file
+	char input_file[] = "input.txt";
+	int size_of_buffer = buffer_size(input_file);
 	buffer = (char*) malloc(sizeof(char) * size_of_buffer);
-	read_text("input.txt", buffer, size_of_buffer);
-	write_text("output.txt", buffer, size_of_buffer);
+	read_text(input_file, buffer, size_of_buffer);
+	
+	
+	// Write to output file
+	char output_file[] = "output.txt";
+	write_text(output_file, buffer, size_of_buffer);
+	
+	// Free memory and exit
 	free(buffer);
 	return 0;
 }
