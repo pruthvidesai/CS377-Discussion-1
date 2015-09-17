@@ -1,3 +1,19 @@
+/*************************/
+/** ASSIGNMENT OVERVIEW **/
+/*************************/
+
+// COURSE: CMPSCI 377 (Operating Systems)
+// DATE: 9-17-15
+// TEAM MEMBERS: Mary Moser, Pruthvi Desai
+// ASSIGNMENT: Lab 1 Warm-Up Exercise
+// OBJECTIVE: Read contents of file,
+//            sort words alphabetically, output to new file
+// INSTRUCTIONS FOR RUNNING: 
+
+/**************/
+/** Includes **/
+/**************/
+
 //#include "stdafx.h"
 #include <stdio.h>
 #include <string.h>
@@ -5,23 +21,23 @@
 #include <ctype.h>
 
 /*********************************************/
-/** Node structure and associated functions **/
+/** Node Structure and Associated Functions **/
 /*********************************************/
 
 struct node {
 	// data structure to hold the word
 	char *word;	//The word represented by this node
 	char *lcword; //The word in lowercase
-	struct node *next;	//The next word in the list
-	struct node *prev; // The previous word in the list
+	node *next;	//The next word in the list
+	node *prev; // The previous word in the list
 };
 
-
+// TODO: Replace instances of head with linked_list struct?
+/*
 struct linked_list {
 	// data structure to hold the head of list
-	struct node *head;
-
-};
+	node *head;
+};*/
 
 // Convert word to lower case
 char *to_lower_case(char *word) {
@@ -38,8 +54,8 @@ char *to_lower_case(char *word) {
 }
 
 // Create and initialize new node (not attached to any list)
-struct node *new_node(char *word) {
-    struct node *n = (struct node *)(malloc(sizeof(struct node)));
+node *new_node(char *word) {
+    node *n = (node *)(malloc(sizeof(node)));
 	n->word = word;
 	n->lcword = to_lower_case(word);
 	n->prev = NULL;
@@ -47,7 +63,7 @@ struct node *new_node(char *word) {
 }
 
 // Free node from memory
-void free_node (struct node *n) {
+void free_node (node *n) {
   if (n != NULL) {
     free(n->word);
     free(n);
@@ -55,7 +71,7 @@ void free_node (struct node *n) {
 }
 
 // Free all nodes in list
-void free_all_nodes (struct node *n) {
+void free_all_nodes (node *n) {
   if (n != NULL) {
     //assert(n->prev == NULL);
     free_all_nodes(n->next);
@@ -101,8 +117,8 @@ int buffer_size(char *filename)
 /** PRINTING FUNCTIONS **/
 /************************/
 /*PRINT*/
-void print_list(struct node *list_head) {
-	for(struct node *to_print = list_head; to_print != NULL; to_print = to_print->next) {
+void print_list(node *list_head) {
+	for(node *to_print = list_head; to_print != NULL; to_print = to_print->next) {
 		printf("%s ", to_print->word);
 	}
 }
@@ -120,16 +136,19 @@ bool next_word(void *buffer, void *word) {
 }
 **/
 
-/** REDEFINED FOR OPTIMIZED SOLUTION
+/** REMOVED FOR OPTIMIZED SOLUTION
 
 // Insert the word in the linked list
 void insert(void *word);
 **/
 
+// Note: You can use a helper function to insert. 
+// The main purpose of the function is to find the location in existing linked list 
+// to insert the new word.
 
 
 /** REDEFINION OF FUNCTION: insert **/
-struct node *insert(struct node *to_insert, struct node *list_head) {
+node *insert(node *to_insert, node *list_head) {
 
 	char *new_word = to_insert->lcword;
 	// $ TESTING ONLY: Print
@@ -146,39 +165,29 @@ struct node *insert(struct node *to_insert, struct node *list_head) {
 	// At least one node in list
 	
 	// Iterate through list to find position
-	struct node *current_node = list_head;
-	struct node *previous = NULL; // Keep track of previous
+	node *current_node = list_head;
+	node *previous = NULL; // Keep track of previous
 	while(1) {
 	
 		char *current_word = current_node->lcword;
 		
-		// $ TESTING ONLY: Print
-		//printf("-- Currently looking at: %s\n", current_word);
-		
 		// Break if new word comes before current word
 		if(strcmp(new_word, current_word) <= 0) {
-		//	printf("-- Comes before ");
 			break;
 		}
 		
-		// New word comes after
+		// If here, word comes after current
 		
 		// If current word is tail, add word to tail
 		if(current_node->next == NULL) {
-			//printf("-- Comes after whole list ");
 			to_insert->next = current_node->next;
 			to_insert->prev = current_node;
 			current_node->next = to_insert;
 			return list_head;
 		}
 		
-		// $ TESTING ONLY: Print
-		//printf("---- New word comes after... %s\n", current_word);
-		
 		current_node = current_node->next;
 	}
-	
-	//printf("---- New word comes after %s and before %s\n", current_node->prev->word, current_node->word);
 	
 	// Insert word before current and after current->previous
 	// REMINDER: to_insert->prev and list_head->prev are NULL by default
@@ -187,128 +196,15 @@ struct node *insert(struct node *to_insert, struct node *list_head) {
 	if(current_node != list_head) { // Inserting in middle
 		current_node->prev->next = to_insert;
 		current_node->prev = to_insert;
-	} else {
-		// Update head
+	} else { // Inserting at head
 		to_insert->next = list_head;
 		list_head->prev = to_insert;
-		list_head = to_insert;
+		list_head = to_insert; // Head points to new node
 	}
-	
-	
-	//struct node *after = current_node->next;
-	//for(current_node = list_head; current_node->next != NULL; current_node = current_node->next) {
-	/** CURRENT 'WORKING' FUNCTIONS **/
-	/*for(current_node = list_head; strcmp((new_word), (current_node->lcword)) >= 0; current_node = current_node->next) {
-	
-		char *current_word = current_node->lcword;
-		printf("-- Currently looking at: %s\n", current_word);
-		
-		// Update pointers
-		
-		// If word is smaller than current, 
-		//if( strcmp((new_word), (current_word)) < 0 ) {
-		//	printf("---- New word is smaller... end loop \n");
-		//	current_word->prev
-		//	break;
-		//}
-		
-		printf("---- New word is larger... \n");
-		
-		// If current node is last in list, don't update
-		if(current_node->next == NULL) {
-			break;
-		}
-		
-		
-	}
-	
-	if(current_node->prev == NULL) { // New word precedes head
-		printf("-- Add new word to head\n");
-		// Update head
-		list_head->prev = to_insert;
-		to_insert->next = list_head;
-		list_head = to_insert;
-		// REMINDER: to_insert->prev is NULL by default
-	} else { // Insert after head
-		struct node *after_current = current_node->next;
-		current_node->next = to_insert;
-		to_insert->prev = current_node;
-		to_insert->next = after_current;
-		if(after_current != NULL) {
-			printf("-- After current is the word: %s\n", after_current->word);
-			after_current->prev = to_insert;
-		}
-		
-		
-	} END CURRENT WORKING*/
-	
-	/*for(current_node = list_head; strcmp((new_word), (current_node->lcword)) >= 0; current_node = current_node->next) {
-	
-		char *current_word = current_node->lcword;
-		printf("-- Currently looking at: %s\n", current_word);
-		
-		// If in loop, word to insert comes after current word
-		printf("---- New word is larger... \n");
-		
-		// If current node is last in list, don't update
-		if(current_node->next == NULL) {
-			to_insert->prev = current_node;
-			to_insert->next = current_node->next;
-			current_node->next = to_insert;
-			return list_head;
-		}
-		
-		
-	}
-	
-	// If in loop, word to insert comes before current
-	printf("---- New word is prior... \n");
-	to_insert->prev = current_node->prev; // NULL if head
-	to_insert->next = current;
-	if(current_node != list_head) { // Middle
-		current->prev->next = to_insert;
-		current->prev = 
-	}*/
-	
-	
-	
-	/*if(current_node == NULL) { // Reached end of list
-		current_node = current_node->prev;
-	}
-	// Update pointers
-	struct node *after_current = current_node->next;
-	current_node->next = to_insert;
-	to_insert->prev = current_node;
-	to_insert->next = after_current;
-	
-	if(current_node->prev == NULL) { // New word precedes head
-		printf("-- Add new word to head\n");
-		// Update head
-		list_head->prev = to_insert;
-		to_insert->next = list_head;
-		list_head = to_insert;
-		// REMINDER: to_insert->prev is NULL by default
-	} else { // Insert after head
-		struct node *after_current = current_node->next;
-		current_node->next = to_insert;
-		to_insert->prev = current_node;
-		to_insert->next = after_current;
-		if(after_current != NULL) {
-			printf("-- After current is the word: %s\n", after_current->word);
-			after_current->prev = to_insert;
-		}
-		
-		
-	}*/
 	
 	return list_head;
 	
-	
 } // end insert
-
-
-
-
 
 /**********************************/
 /** Write Results to Output File **/
@@ -324,9 +220,9 @@ bool write_text(char *filename, void *buffer, int size_of_buffer)
 	return 0;
 }
 
-// Note: You can use a helper function to insert. 
-// The main purpose of the function is to find the location in existing linked list 
-// to insert the new word.
+/**********/
+/** Main **/
+/**********/
 
 // create the list and return the alphabetically sorted output
 int main() {
@@ -339,16 +235,15 @@ int main() {
 	int size_of_buffer = buffer_size(input_file);
 	buffer = (char*) malloc(sizeof(char) * size_of_buffer);
 	read_text(input_file, buffer, size_of_buffer);
-	buffer[size_of_buffer] = '\0'; // Mark end of string
-	printf("The bytes read are\n[%s]\n", buffer);
+	buffer[size_of_buffer] = '\0'; // Mark end of string (for safety)
 	
 	// Define list
-	struct node *list_head = NULL;
-	struct linked_list *list_of_words = (struct linked_list*) malloc(sizeof(linked_list));
-	struct node *to_add;
+	node *list_head = NULL;
+	//linked_list *list_of_words = (struct linked_list*) malloc(sizeof(linked_list));
+	node *to_add;
 	
 	// $ TESTING ONLY: Print
-	printf ("Splitting string \"%s\" into tokens:\n\n",buffer);
+	printf ("\nSplitting string \"%s\" into tokens:\n",buffer);
 	
 	// Split words in buffer
 	for (char *current_word = strtok(buffer, " "); current_word != NULL; current_word = strtok (NULL, " ")) {
@@ -360,12 +255,14 @@ int main() {
 	  list_head = insert(to_add, list_head);
 	  //insert(to_add, list_of_words);
 	  
+	  // $ TESTING ONLY: Print
 	  //printf("\nNew List: ");
 	  //print_list(list_head);
 	  //printf("\n\n");
 	}
 	
 	// $ TESTING ONLY: Print
+	printf ("\nWrite following results to file:\n",buffer);
 	print_list(list_head);
 	printf("\n");
 	
