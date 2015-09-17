@@ -4,7 +4,7 @@
 
 // COURSE: CMPSCI 377 (Operating Systems)
 // DATE: 9-17-15
-// TEAM MEMBERS: Mary Moser, Pruthvi Desai
+// TEAM MEMBERS: Mary Moser (29154085), Pruthvi Desai
 // ASSIGNMENT: Lab 1 Warm-Up Exercise
 // OBJECTIVE: Read contents of file,
 //            sort words alphabetically, output to new file
