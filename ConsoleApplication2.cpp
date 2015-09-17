@@ -57,6 +57,7 @@ node *new_node(char *word) {
 	n->next = NULL;
 }
 
+/** UNUSED / BUGGY
 // Free node from memory
 void free_node (node *n) {
   if (n != NULL) {
@@ -71,7 +72,7 @@ void free_all_nodes (node *n) {
     free_all_nodes(n->next);
     free_node(n);
   }
-}
+}*/
 
 /******************/
 /** Reading File **/
@@ -239,15 +240,15 @@ int main() {
 	node *to_add;
 	
 	// $ TESTING ONLY: Print
-	printf ("\nSplitting string \"%s\" into tokens:\n",buffer);
+	printf ("\nCreating sorted list from string...\n",buffer);
 	
 	// Split words in buffer
 	for (char *current_word = strtok(buffer, " "); current_word != NULL; current_word = strtok (NULL, " ")) {
 	  
-	  // Create new node and add to head
+	  // Create new node
 	  to_add = new_node(current_word);
 	 
-	  // Change position
+	  // Insert into list
 	  list_head = insert(to_add, list_head);
 	  
 	}
