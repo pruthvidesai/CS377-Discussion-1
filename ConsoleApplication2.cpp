@@ -91,7 +91,7 @@ bool read_text(char *filename, void *buffer, int size_of_buffer)
 	}
 
 	int read = fread(buffer, (size_t)sizeof(char), (size_t)size_of_buffer, input_file);
-	printf("The bytes read are\n[%s]\n", buffer);
+	printf("The bytes read are\n[%s]\n", (char *)buffer);
 	//printf("Pointer size is: %d vs %d\n", size_of_buffer * sizeof(char), read);
 	//printf("Sizeof(buffer): %d\n", sizeof(buffer));
 	fclose(input_file);
@@ -111,7 +111,7 @@ int buffer_size(char *filename)
 /************************/
 /** PRINTING FUNCTIONS **/
 /************************/
-/*PRINT*/
+
 void print_list(node *list_head) {
 	for(node *to_print = list_head; to_print != NULL; to_print = to_print->next) {
 		printf("%s ", to_print->word);
