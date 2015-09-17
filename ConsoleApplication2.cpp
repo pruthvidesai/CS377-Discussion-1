@@ -133,12 +133,12 @@ struct node *insert(struct node *to_insert, struct node *list_head) {
 
 	char *new_word = to_insert->lcword;
 	// $ TESTING ONLY: Print
-	printf("\n-------------------\nAdding word: %s\n", new_word);
+	//printf("\n-------------------\nAdding word: %s\n", new_word);
 
 	// If list is empty, make new node head
 	if(list_head == NULL) {
 		// $ TESTING ONLY: Print
-		printf("---- No list; add as head\n");
+		//printf("---- No list; add as head\n");
 		list_head = to_insert;
 		return list_head;
 	}
@@ -147,15 +147,17 @@ struct node *insert(struct node *to_insert, struct node *list_head) {
 	
 	// Iterate through list to find position
 	struct node *current_node = list_head;
+	struct node *previous = NULL; // Keep track of previous
 	while(1) {
 	
 		char *current_word = current_node->lcword;
 		
 		// $ TESTING ONLY: Print
-		printf("-- Currently looking at: %s\n", current_word);
+		//printf("-- Currently looking at: %s\n", current_word);
 		
 		// Break if new word comes before current word
 		if(strcmp(new_word, current_word) <= 0) {
+		//	printf("-- Comes before ");
 			break;
 		}
 		
@@ -163,16 +165,20 @@ struct node *insert(struct node *to_insert, struct node *list_head) {
 		
 		// If current word is tail, add word to tail
 		if(current_node->next == NULL) {
-			to_insert->next = NULL;
+			//printf("-- Comes after whole list ");
+			to_insert->next = current_node->next;
 			to_insert->prev = current_node;
+			current_node->next = to_insert;
 			return list_head;
 		}
 		
 		// $ TESTING ONLY: Print
-			printf("---- New word comes after... %s\n", current_word);
+		//printf("---- New word comes after... %s\n", current_word);
 		
 		current_node = current_node->next;
 	}
+	
+	//printf("---- New word comes after %s and before %s\n", current_node->prev->word, current_node->word);
 	
 	// Insert word before current and after current->previous
 	// REMINDER: to_insert->prev and list_head->prev are NULL by default
@@ -354,15 +360,13 @@ int main() {
 	  list_head = insert(to_add, list_head);
 	  //insert(to_add, list_of_words);
 	  
-	  printf("\nNew List: ");
-	  print_list(list_head);
-	  printf("\n\n");
+	  //printf("\nNew List: ");
+	  //print_list(list_head);
+	  //printf("\n\n");
 	}
 	
 	// $ TESTING ONLY: Print
-	for(struct node *to_print = list_head; to_print != NULL; to_print = to_print->next) {
-		printf("%s ", to_print->word);
-	}
+	print_list(list_head);
 	printf("\n");
 	
 	
