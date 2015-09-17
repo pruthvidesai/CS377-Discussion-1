@@ -8,7 +8,9 @@
 // ASSIGNMENT: Lab 1 Warm-Up Exercise
 // OBJECTIVE: Read contents of file,
 //            sort words alphabetically, output to new file
-// INSTRUCTIONS FOR RUNNING: 
+// INSTRUCTIONS FOR RUNNING: On Linux Machine:
+//                           gcc ConsoleApplication2.cpp -o ConsoleApp
+//                           ./ConsoleApp
 
 /**************/
 /** Includes **/
@@ -31,13 +33,6 @@ struct node {
 	node *next;	//The next word in the list
 	node *prev; // The previous word in the list
 };
-
-// TODO: Replace instances of head with linked_list struct?
-/*
-struct linked_list {
-	// data structure to hold the head of list
-	node *head;
-};*/
 
 // Convert word to lower case
 char *to_lower_case(char *word) {
@@ -73,7 +68,6 @@ void free_node (node *n) {
 // Free all nodes in list
 void free_all_nodes (node *n) {
   if (n != NULL) {
-    //assert(n->prev == NULL);
     free_all_nodes(n->next);
     free_node(n);
   }
@@ -151,13 +145,9 @@ void insert(void *word);
 node *insert(node *to_insert, node *list_head) {
 
 	char *new_word = to_insert->lcword;
-	// $ TESTING ONLY: Print
-	//printf("\n-------------------\nAdding word: %s\n", new_word);
 
 	// If list is empty, make new node head
 	if(list_head == NULL) {
-		// $ TESTING ONLY: Print
-		//printf("---- No list; add as head\n");
 		list_head = to_insert;
 		return list_head;
 	}
@@ -211,11 +201,18 @@ node *insert(node *to_insert, node *list_head) {
 /**********************************/
 
 // Write to a new file
-bool write_text(char *filename, void *buffer, int size_of_buffer)
+bool write_text(char *filename, node *list_head)
 {
 	FILE *output_file;
 	output_file = fopen(filename, "wb");
-	fwrite(buffer, (size_t)sizeof(char), (size_t)size_of_buffer, output_file);
+	if(list_head != NULL) { // List not empty
+		// Write first word -- no spaces
+		fprintf(output_file, "%s", list_head->word);
+		// Write rest of list -- words preceded by spaces
+		for(node *to_print = list_head->next; to_print != NULL; to_print = to_print->next) {
+			fprintf(output_file, " %s", to_print->word);
+		}
+	}
 	fclose(output_file);
 	return 0;
 }
@@ -239,7 +236,6 @@ int main() {
 	
 	// Define list
 	node *list_head = NULL;
-	//linked_list *list_of_words = (struct linked_list*) malloc(sizeof(linked_list));
 	node *to_add;
 	
 	// $ TESTING ONLY: Print
@@ -253,12 +249,7 @@ int main() {
 	 
 	  // Change position
 	  list_head = insert(to_add, list_head);
-	  //insert(to_add, list_of_words);
 	  
-	  // $ TESTING ONLY: Print
-	  //printf("\nNew List: ");
-	  //print_list(list_head);
-	  //printf("\n\n");
 	}
 	
 	// $ TESTING ONLY: Print
@@ -269,7 +260,7 @@ int main() {
 	
 	// Write to output file
 	char output_file[] = "output.txt";
-	write_text(output_file, buffer, size_of_buffer);
+	write_text(output_file, list_head);
 	
 	// Free memory and exit
 	free(buffer);
